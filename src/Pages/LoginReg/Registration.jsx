@@ -62,7 +62,7 @@ const Registration = () => {
                             .then(res => res.json())
                             .then(data => {
                                 // console.log(data);
-             
+
                                 if (data.insertedId) {
                                     reset();
                                     toast("Successfully registered!!!")
@@ -88,28 +88,72 @@ const Registration = () => {
 
 
             <form onSubmit={handleSubmit(onSubmit)} >
-                <div className="hero min-h-screen  ">
-                    <div className="hero-content flex-col lg:flex-row-reverse">
-                        <div className="text-center lg:text-left">
-                            <h1 className="text-5xl font-bold mt-16">Register now!</h1>
-                            <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat u  aut repudiandae et a id nisi.</p>
-                        </div>
+                <div className="hero  my-24 ">
+                    <div className="hero-content flex-col lg:flex-row-reverse w-full">
 
-
-                        <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-800 border  ">
+                        <div className="card bg-white flex-shrink-0  w-3/5  shadow-2xl bg-base-800 border  ">
                             <div className="card-body">
 
+                                <h1 className='text-4xl font-bold  '>Create an <span className='text-blue-600 '>account</span></h1>
+                                <div className='border w-24 border-blue-600 mb-6'> </div>
 
-                                <div className="form-control  ">
-                                    <label className="label">
-                                        <span className="label-text text-black">Name</span>
-                                    </label>
+                                <div className="form-control  mb-4">
                                     <input type="text"
                                         {...register("name", { required: true, maxLength: 100 })}
                                         placeholder="Enter your Name"
-                                        className="input input-bordered bg-white border border-sky-300 text-black" />
+                                        className=" py-2   border-b-4 bg-white  outline-none      text-black  text-xl  " />
                                     {errors.name && <span className='text-red-600 mt-2'>Name field is required</span>}
                                 </div>
+
+                                <div className="form-control  mb-4">
+                                    <input type="email"
+                                        {...register("email", { required: true, maxLength: 100 })}
+                                        placeholder="Enter your Email"
+                                        className=" py-2   border-b-4 bg-white  outline-none      text-black  text-xl  " />
+                                    {errors.email && <span className='text-red-600 mt-2'>Email field is required</span>}
+                                </div>
+                                <div className="form-control  mb-4">
+                                    <input type="password"
+                                        {...register("password", { required: true, maxLength: 100 })}
+                                        placeholder="Enter your Password"
+                                        className=" py-2   border-b-4 bg-white  outline-none      text-black  text-xl  " />
+                                    {errors.password && <span className='text-red-600 mt-2'>password field is required</span>}
+                                </div>
+
+                                <div className='flex justify-between gap-12'>
+                                    {/* doctor or patient */}
+                                    <div className=' flex '>
+                                        <div>
+                                            <p className='font-bold'>Are you a : </p>
+                                        </div>
+                                        <div>
+                                            <select {...register("role")}
+                                                className='bg-white ml-4 text-gray-500 ' >
+                                                <option value="patient"  >Patient</option>
+                                                <option value="doctor">Doctor</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                    {/* gender */}
+                                    <div className='flex mr-4'>
+                                        <div>
+                                            <p className='font-bold'>Gender :</p>
+                                        </div>
+                                        <div>
+                                            <select {...register("gender")} className='bg-white ml-4 text-gray-500 '>
+                                            <option value="male"  >Male</option>
+                                                <option value="female">Female</option>
+                                                <option value="other"  >Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
 
                                 <div className="form-control  ">
                                     <label className="label">
@@ -121,17 +165,6 @@ const Registration = () => {
                                         className="input input-bordered bg-white border border-sky-300 text-black" />
                                     {errors.email && <span className='text-red-600 mt-2'>Email field is required</span>}
                                 </div>
-
-
-
-
-
-
-
-
-
-
-
 
                                 <div className="form-control">
                                     <label className="label">
@@ -191,7 +224,7 @@ const Registration = () => {
 
 
                                 <div className="form-control mt-6">
-                                    <button className="btn btn-primary"><input type="submit" value='Register' /></button>
+                                    <button className="btn btn-primary bg-blue-600 border-none"><input type="submit" value='Register' /></button>
 
                                 </div>
                                 <br />

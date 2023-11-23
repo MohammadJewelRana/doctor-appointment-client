@@ -7,8 +7,11 @@ import { FaStar } from 'react-icons/fa';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import Feedback from './Feedback';
 
 const DoctorDetails = () => {
+
+    const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
     // const [loading,setLoading]=useState(true);
 
@@ -162,7 +165,7 @@ const DoctorDetails = () => {
                                             <div>
                                                 <p>Jewel Rana</p>
                                                 <p>June 27, 2023</p>
-                                                <p className='text-xl mt-8'>Excellent service</p>
+                                                <p className='text-[16px] text-gray-600 mt-4 '>Excellent service</p>
                                             </div>
                                         </div>
                                         <div className='flex gap-4'>
@@ -178,23 +181,29 @@ const DoctorDetails = () => {
                                             <div>
                                                 <p>Jewel Rana</p>
                                                 <p>June 27, 2023</p>
-                                                <p className='text-xl mt-8'>Excellent service</p>
+                                                <p className='text-[16px] text-gray-600 mt-4 '>Excellent service</p>
                                             </div>
                                         </div>
                                         <div className='flex gap-4'>
                                             <FaStar></FaStar>
                                             <FaStar></FaStar>
                                             <FaStar></FaStar>
-                                            
+
                                         </div>
                                     </div>
                                     {/* reviews end */}
 
 
-                                    <button className="btn w-full mt-16 text-xl  btn-success outline-none border-none text-white">Give Feedback</button>
+                                    {
+                                        !showFeedbackForm &&
+                                        <button className="btn w-full mt-16 text-xl  btn-success outline-none border-none text-white " onClick={() => setShowFeedbackForm(true)}>Give Feedback</button>
 
+                                    }
 
-
+                                    {
+                                        showFeedbackForm &&
+                                        <Feedback></Feedback>
+                                    }
 
 
 
@@ -222,7 +231,7 @@ const DoctorDetails = () => {
 
 
 
-{/*  
+                    {/*  
 <button className="btn" onClick={()=>window.my_modal_1.showModal()}>open modal</button>
 
 <dialog id="my_modal_1 " className="modal  ">
