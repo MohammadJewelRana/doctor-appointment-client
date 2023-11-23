@@ -1,0 +1,61 @@
+ @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color:black;
+    background-color: white;
+ 
+  }
+
+
+  @layer base{
+    section{
+      @apply py-[75px]
+    }
+  }
+
+  @layer components{
+    .container{
+      @apply max-w-full w-[1440px] px-5 mx-auto
+    }
+
+    /* .btn{
+      @apply bg-primary py-[15px] px-[35px] rounded-[50px] text-white font-[600] mt-[38px]
+    } */
+
+    .heading{
+      @apply text-[44px] leading-[54px] font-[700] text-black
+    }
+
+    .header{
+      @apply bg-[url('./assets/images/mask.png')] bg-no-repeat bg-center bg-cover w-full h-[100px] 
+    }
+    .hero__section{
+      @apply bg-[url('./assets/images/hero-bg.png')] bg-no-repeat bg-center bg-cover   
+    }
+
+  }
+
+/* 
+  @media only screen and (max-width:1024px){
+    .container{
+      @apply w-full;
+    }
+
+    section{
+      @apply py-[35px]
+    }
+  }
+
+  @media only screen and (max-width:768px){
+    .heading{
+      @apply text-[26px] leading-[36px];
+    }
+
+    section{
+      @apply py-[35px]
+    }
+  } */
