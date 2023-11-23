@@ -7,7 +7,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Provider/AuthProvider';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import profilePhoto from '../../assets/images/portfolio-02.jpg'
+import Swal from 'sweetalert2';
 
+
+const img_hosting_token = import.meta.env.VITE_Image_Upload_Token;
 
 const Registration = () => {
     //password hide and show
@@ -20,58 +24,109 @@ const Registration = () => {
     const navigate = useNavigate();
     const { user, createAccount, updateUserProfile } = useContext(AuthContext);
     const { register, reset, handleSubmit, formState: { errors } } = useForm();
+    const img_hosting_url = `https://api.imgbb.com/1/upload?key=${img_hosting_token}`;
 
     const onSubmit = data => {
 
+        const formData = new FormData();
+        formData.append('image', data.photo[0]);
+
         // console.log(data);
 
-        if (data.confirmPassword != data.password) {
-            toast("Password and confirm password doesn't match");
-            return;
-        }
+
+        fetch(img_hosting_url, {
+            method: 'post',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(imgResponse => {
+                console.log(imgResponse);
+                if (imgResponse.success) {
+                    const imgURL = imgResponse.data.display_url;
+                    // console.log(imgURL);
+                    // console.log(data);
+                    const { name, email, password, gender, role } = data;
+
+                    const newData = { name, email, password, gender, role, image: imgURL };
+                    // console.log(newData);
+
+
+                    createAccount(data.email, data.password)
+                        .then(res => {
+                            const user = res.user;
+                            // console.log(user);
+                            fetch(' http://localhost:5000/users', {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify(newData)
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    console.log(data);
+                                    if (data.insertedId) {
+                                        reset();
+                                        toast("Successfully registered!!!")
+                                        Swal.fire({
+                                            title: 'Success!',
+                                            text: 'User registration successfully',
+                                            icon: 'success',
+                                            confirmButtonText: 'Ok'
+                                        })
+
+                                        navigate('/login');
+                                    }
+                                    else {
+                                        navigate('/registration')
+                                    }
+
+                                })
+                                .catch(error => console.log(error))
+                            toast('Error!!')
+                            navigate('/registration')
+
+
+                        })
+
+
+                }
+            })
+
+
+
+
 
         // createAccount(data.email, data.password)
         //     .then(res => {
         //         const user = res.user;
         //         // console.log(user);
-        //         toast("Successfully registered!!!")
-        //         navigate('/login');
+        //         updateUserProfile(data.name)
+        //             .then(() => {
+        //                 const saveUser = { name: data.name, email: data.email, role: data.role, password: data.password,gender:data.gender };
+        //                 // console.log('User profile info updated', saveUser);
+
+
+        //                 fetch(' http://localhost:5000/users', {
+        //                     method: 'POST',
+        //                     headers: {
+        //                         'content-type': 'application/json'
+        //                     },
+        //                     body: JSON.stringify(saveUser)
+        //                 })
+        //                     .then(res => res.json())
+        //                     .then(data => {
+        //                         // console.log(data);
+
+        //                         if (data.insertedId) {
+        //                             reset();
+        //                             toast("Successfully registered!!!")
+        //                             navigate('/login');
+        //                         }
+        //                     })
+        //             })
+        //             .catch(error => console.log(error))
         //     })
-        //     .catch((error) => {
-        //         // console.log(error);
-        //         toast("  Registration Failed!!!");
-        //     })
-
-        createAccount(data.email, data.password)
-            .then(res => {
-                const user = res.user;
-                // console.log(user);
-                updateUserProfile(data.name)
-                    .then(() => {
-                        const saveUser = { name: data.name, email: data.email, role: 'customer', password: data.password };
-                        // console.log('User profile info updated', saveUser);
-
-
-                        fetch(' http://localhost:5000/users', {
-                            method: 'POST',
-                            headers: {
-                                'content-type': 'application/json'
-                            },
-                            body: JSON.stringify(saveUser)
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                // console.log(data);
-
-                                if (data.insertedId) {
-                                    reset();
-                                    toast("Successfully registered!!!")
-                                    navigate('/login');
-                                }
-                            })
-                    })
-                    .catch(error => console.log(error))
-            })
 
     }
 
@@ -88,11 +143,11 @@ const Registration = () => {
 
 
             <form onSubmit={handleSubmit(onSubmit)} >
-                <div className="hero  my-24 ">
-                    <div className="hero-content flex-col lg:flex-row-reverse w-full">
+                <div className="hero     ">
+                    <div className="hero-content flex-col   md:w-full ">
 
-                        <div className="card bg-white flex-shrink-0  w-3/5  shadow-2xl bg-base-800 border  ">
-                            <div className="card-body">
+                        <div className="card bg-white flex-shrink-0  md:w-3/5  shadow-2xl bg-base-800 border    ">
+                            <div className="card-body ">
 
                                 <h1 className='text-4xl font-bold  '>Create an <span className='text-blue-600 '>account</span></h1>
                                 <div className='border w-24 border-blue-600 mb-6'> </div>
@@ -101,7 +156,7 @@ const Registration = () => {
                                     <input type="text"
                                         {...register("name", { required: true, maxLength: 100 })}
                                         placeholder="Enter your Name"
-                                        className=" py-2   border-b-4 bg-white  outline-none      text-black  text-xl  " />
+                                        className=" py-2 px-4  border-b-4 bg-white  outline-none      text-black  text-xl  " />
                                     {errors.name && <span className='text-red-600 mt-2'>Name field is required</span>}
                                 </div>
 
@@ -109,26 +164,26 @@ const Registration = () => {
                                     <input type="email"
                                         {...register("email", { required: true, maxLength: 100 })}
                                         placeholder="Enter your Email"
-                                        className=" py-2   border-b-4 bg-white  outline-none      text-black  text-xl  " />
+                                        className=" py-2 px-4  border-b-4 bg-white  outline-none      text-black  text-xl  " />
                                     {errors.email && <span className='text-red-600 mt-2'>Email field is required</span>}
                                 </div>
                                 <div className="form-control  mb-4">
                                     <input type="password"
                                         {...register("password", { required: true, maxLength: 100 })}
                                         placeholder="Enter your Password"
-                                        className=" py-2   border-b-4 bg-white  outline-none      text-black  text-xl  " />
+                                        className=" py-2 px-4  border-b-4 bg-white  outline-none      text-black  text-xl  " />
                                     {errors.password && <span className='text-red-600 mt-2'>password field is required</span>}
                                 </div>
 
-                                <div className='flex justify-between gap-12'>
+                                <div className='flex justify-between md:gap-12 my-8 '>
                                     {/* doctor or patient */}
-                                    <div className=' flex '>
+                                    <div className=' flex mb-4'>
                                         <div>
-                                            <p className='font-bold'>Are you a : </p>
+                                            <p className='font-bold text-[14px] md:text-[16px]'>Are you a : </p>
                                         </div>
                                         <div>
                                             <select {...register("role")}
-                                                className='bg-white ml-4 text-gray-500 ' >
+                                                className='bg-white md:ml-4 text-gray-500 ' >
                                                 <option value="patient"  >Patient</option>
                                                 <option value="doctor">Doctor</option>
                                             </select>
@@ -142,8 +197,8 @@ const Registration = () => {
                                             <p className='font-bold'>Gender :</p>
                                         </div>
                                         <div>
-                                            <select {...register("gender")} className='bg-white ml-4 text-gray-500 '>
-                                            <option value="male"  >Male</option>
+                                            <select {...register("gender")} className='bg-white md:ml-4 text-gray-500 '>
+                                                <option value="male"  >Male</option>
                                                 <option value="female">Female</option>
                                                 <option value="other"  >Other</option>
                                             </select>
@@ -153,80 +208,34 @@ const Registration = () => {
 
 
 
-
-
-                                <div className="form-control  ">
-                                    <label className="label">
-                                        <span className="label-text text-black">Email</span>
-                                    </label>
-                                    <input type="text"
-                                        {...register("email", { required: true, maxLength: 100 })}
-                                        placeholder="Enter your Email"
-                                        className="input input-bordered bg-white border border-sky-300 text-black" />
-                                    {errors.email && <span className='text-red-600 mt-2'>Email field is required</span>}
-                                </div>
-
-                                <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text text-black">Password</span>
-                                    </label>
-                                    <div className='w-full rounded-md border-sky-300 flex  justify-between border'>
-                                        <input type={show ? "text" : "password"} required
-                                            {...register("password", {
-                                                required: true,
-                                                maxLength: 20,
-                                                minLength: 6,
-                                                pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z])/
-
-                                            })}
-                                            placeholder="password" className="input    bg-white border  text-black" />
-                                        <button  ><FaEye className=' mr-4' onClick={handleShow}>{show ? "Hide" : "Show"}</FaEye></button>
-
-
+                                <div>
+                                    <div className='flex relative items-center'>
+                                        <figure>
+                                            <img src={profilePhoto} className='rounded-full h-12 w-12' alt="" />
+                                        </figure>
+                                        <input type="file"
+                                            {...register("photo",)}
+                                            className='  px-6 cursor-pointer   ' />
                                     </div>
-                                    <p>
-                                        {errors.password?.type === 'required' && <p className='text-red-600 mt-2' > Password is required</p>}
-                                        {errors.password?.type === 'minLength' && <p className='text-red-600 mt-2' > Password must be 6 character</p>}
-                                        {errors.password?.type === 'maxLength' && <p className='text-red-600 mt-2' > Password should not be greater than 20 character   </p>}
-                                        {errors.password?.type === 'pattern' && <p className='text-red-600 mt-2' > Password  must have one uppercase one lowercase one number and one special characters  </p>}
-                                    </p>
-
-                                </div>
-
-
-                                <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text text-black">Confirm Password</span>
-                                    </label>
-                                    <div className='w-full rounded-md border-sky-300 flex  justify-between border'>
-                                        <input type={show ? "text" : "password"} required
-                                            {...register("confirmPassword", {
-                                                required: true,
-                                                maxLength: 20,
-                                                minLength: 6,
-                                                pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z])/
-
-                                            })}
-                                            placeholder="confirm password" className="input    bg-white border  text-black" />
-                                        <button  ><FaEye className=' mr-4' onClick={handleShow}>{show ? "Hide" : "Show"}</FaEye></button>
-
-
-                                    </div>
-                                    <p>
-                                        {errors.confirmPassword?.type === 'required' && <p className='text-red-600 mt-2' > Password is required</p>}
-                                        {errors.confirmPassword?.type === 'minLength' && <p className='text-red-600 mt-2' > Password must be 6 character</p>}
-                                        {errors.confirmPassword?.type === 'maxLength' && <p className='text-red-600 mt-2' > Password should not be greater than 20 character   </p>}
-                                        {errors.confirmPassword?.type === 'pattern' && <p className='text-red-600 mt-2' > Password  must have one uppercase one lowercase one number and one special characters  </p>}
-                                    </p>
-
+                                    {/* <div>
+    <label className='bg-gray-400 w-52 text-center cursor-pointer p-2 rounded-lg absolute -m-12 ml-16'>
+        Upload Photo
+    </label>
+</div> */}
                                 </div>
 
 
 
-                                <div className="form-control mt-6">
-                                    <button className="btn btn-primary bg-blue-600 border-none"><input type="submit" value='Register' /></button>
 
-                                </div>
+
+
+
+
+
+
+                                <input type="submit" value='Sign Up' className='border bg-blue-600 py-2 text-white  mt-8 rounded-lg cursor-pointer hover:bg-blue-500 transition-all' />
+
+
                                 <br />
                                 <hr />
 

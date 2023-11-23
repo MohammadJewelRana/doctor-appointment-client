@@ -9,13 +9,13 @@ import Header from '../Shared/Header';
 const HomeLayout = () => {
 
 
-    const {loading}=useContext(AuthContext);
+    // const {loading}=useContext(AuthContext);
     
-    if(loading){
+    // if(loading){
 
-        return <LoadingPage></LoadingPage>
+    //     return <LoadingPage></LoadingPage>
 
-    }
+    // }
 
 
 
