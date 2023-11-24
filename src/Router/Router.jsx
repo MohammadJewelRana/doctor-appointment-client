@@ -14,6 +14,8 @@ import User from '../Dashboard/Users/User';
 import Dashboard from '../Dashboard/Dasboard/Dashboard';
 import AddDoctor from '../Dashboard/AddDoctor/AddDoctor';
 import Inbox from '../Dashboard/Inbox/Inbox';
+import MyBookings from '../Pages/Profile/MyBookings';
+import Settings from '../Pages/Profile/Settings';
  
 // import Doctor from '../Pages/Home/Doctors/Doctor';
 
@@ -42,10 +44,7 @@ const Router = createBrowserRouter([
                 path:'/doctor/:id',
                 element:<DoctorDetails></DoctorDetails>
             },
-            {
-                path:'/profile',
-                element:<Profile></Profile>
-            },
+ 
             {
                 path:'/login',
                 element:<Login></Login>
@@ -54,9 +53,42 @@ const Router = createBrowserRouter([
                 path:'/registration',
                 element:<Registration></Registration>
             },
+
+            {
+                path:'/profile',
+                element:<Profile></Profile>,
+                // children:[
+                //     {
+                //         path:'/profile',
+                //         element:<MyBookings></MyBookings>
+                //     },
+                //     {
+                //         path:'/profile/settings',
+                //         element:<Settings></Settings>
+                //     }
+                // ]
+        
+        
+            },
         ]
 
     },
+
+
+    // {
+    //     path:'/profile',
+    //     element:<Profile></Profile>,
+    //     children:[
+    //         {
+    //             path:'/profile/myBookings',
+    //             element:<MyBookings></MyBookings>
+    //         }
+    //     ]
+
+
+    // },
+
+
     {
         path:'/dashboard',
         element:<DashboardHome></DashboardHome>,
