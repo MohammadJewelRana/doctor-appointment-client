@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SocialLogin from './SocialLogin';
 import { AuthContext } from '../../Provider/AuthProvider';
+import Swal from 'sweetalert2';
 
 
 const Login = () => {
@@ -18,7 +19,7 @@ const Login = () => {
     }
 
 
-    const { login,user } = useContext(AuthContext);
+    const { login, user } = useContext(AuthContext);
     console.log(user);
 
 
@@ -40,6 +41,29 @@ const Login = () => {
                 // console.log(user);
                 navigate(from, { replace: true });
                 reset();
+                let timerInterval;
+                Swal.fire({
+                    title: "Successfully Login to the account!",
+                    html: "Popup will close in <b></b> milliseconds.",
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    }
+                }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("I was closed by the timer");
+                    }
+                });
+
                 toast("Successfully Login!!!");
 
             })
@@ -50,7 +74,7 @@ const Login = () => {
 
     }
 
-    
+
     const handleShowPassword = () => {
         if (show === false) {
             setShow('password');
@@ -98,7 +122,17 @@ const Login = () => {
 
 
                                     <div className="form-control">
-                                        <label className="label">
+
+                                        <div className="form-control  mb-4">
+                                            <input type="password"
+                                                {...register("password", { required: true, maxLength: 100 })}
+                                                placeholder="Enter your Password"
+                                                className=" py-2 px-4  border-b-4 bg-white  outline-none      text-black  text-xl  " />
+                                            {errors.password && <span className='text-red-600 mt-2'>password field is required</span>}
+                                        </div>
+
+
+                                        {/* <label className="label">
                                             <span className="label-text text-black">Password</span>
                                         </label>
                                         <div className='w-full rounded-md border-sky-300 flex  justify-between border'>
@@ -107,20 +141,20 @@ const Login = () => {
                                                     required: true,
                                                     maxLength: 20,
                                                     minLength: 6,
-                                                    pattern: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z].*[a-z])/
+                                                   
 
                                                 })}
                                                 placeholder="password" className="input    bg-white border  text-black" />
                                             <button  ><FaEye className=' mr-4' onClick={handleShow}>{show ? "Hide" : "Show"}</FaEye></button>
 
 
-                                        </div>
-                                        <p>
+                                        </div> */}
+                                        {/* <p>
                                             {errors.password?.type === 'required' && <p className='text-red-600 mt-2' > Password is required</p>}
                                             {errors.password?.type === 'minLength' && <p className='text-red-600 mt-2' > Password must be 6 character</p>}
                                             {errors.password?.type === 'maxLength' && <p className='text-red-600 mt-2' > Password should not be greater than 20 character   </p>}
                                             {errors.password?.type === 'pattern' && <p className='text-red-600 mt-2' > Password  must have one uppercase one lowercase one number and one special characters  </p>}
-                                        </p>
+                                        </p>   */}
 
                                     </div>
 

@@ -73,7 +73,7 @@ const Appointments = () => {
                     ))}
                 </div>
             ) : (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto md:mr-12   md:-ml-36 lg:ml-4">
                     <table className="    border-gray-300  ">
                         <thead>
                             <tr className="bg-gray-200">
